@@ -1,5 +1,4 @@
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class ValueCalculator {
@@ -7,24 +6,24 @@ public class ValueCalculator {
         String[] words = query.split(" ");
 
         // Check for specific query types
-        if (query.startsWith("HOW MUCH IS")) {
+        if (query.startsWith("how much is")) {
             return calculateHowMuchQuery(words, romanNumerals);
-        } else if (query.startsWith("HOW MANY CREDITS IS")) {
+        } else if (query.startsWith("how many Credits is")) {
             return calculateHowManyCreditsQuery(words, romanNumerals);
-        } else if (query.startsWith("DOES") && query.contains("HAVE MORE CREDITS THAN") || query.contains("HAS MORE CREDITS THAN")) {
+        } else if (query.toLowerCase().startsWith("does") && query.contains("have more Credits than") || query.contains("has more Credits than")) {
             return calculateComparisonQuery(words, romanNumerals, "more");
-        } else if (query.startsWith("DOES") && (query.contains("HAVE LESS CREDITS THAN") || query.contains("HAS LESS CREDITS THAN")) ) {
+        } else if (query.toLowerCase().startsWith("does") && (query.contains("have less Credits than") || query.contains("has less Credits than")) ) {
             return calculateComparisonQuery(words, romanNumerals, "less");
-        } else if (query.startsWith("IS") && query.contains("LARGER THAN")) {
+        } else if (query.toLowerCase().startsWith("is") && query.contains("larger than")) {
             return calculateComparisonQuery(words, romanNumerals, "larger");
-        } else if (query.startsWith("IS") && query.contains("SMALLER THAN")) {
+        } else if (query.toLowerCase().startsWith("is") && query.contains("smaller than")) {
             return calculateComparisonQuery(words, romanNumerals, "smaller");
         }
 
-        return "I have no idea what you are talking about";
+        return Literals.differentSting;
     }
 
-    private String calculateHowMuchQuery(String[] words, HashMap<String, String> romanNumerals) {
+    public String calculateHowMuchQuery(String[] words, HashMap<String, String> romanNumerals) {
         StringBuilder romanNumeral = new StringBuilder();
         StringBuilder query = new StringBuilder();
         for (int i = 3; i < words.length - 1; i++) {
@@ -32,19 +31,19 @@ public class ValueCalculator {
                 romanNumeral.append(romanNumerals.get(words[i]));
                 query.append(words[i]).append(" ");
             } else {
-                return "I have no idea what you are talking about";
+                return Literals.differentSting;
             }
         }
 
         int decimalValue = RomanToDecimalConverter.convertToDecimal(romanNumeral.toString());
         if (decimalValue == -1) {
-            return "Requested number is in invalid format";
+            return Literals.wrongString;
         }
 
         return query.toString().trim() + " is " + decimalValue;
     }
 
-    private String calculateHowManyCreditsQuery(String[] words, HashMap<String, String> romanNumerals) {
+    public String calculateHowManyCreditsQuery(String[] words, HashMap<String, String> romanNumerals) {
 
         StringBuilder romanNumeral = new StringBuilder();
         StringBuilder query = new StringBuilder();
@@ -55,29 +54,26 @@ public class ValueCalculator {
                 romanNumeral.append(romanNumerals.get(words[i]));
                 query.append(words[i]).append(" ");
             } else {
-                return "I have no idea what you are talking about";
+                return Literals.differentSting;
             }
         }
 
         int decimalValue = RomanToDecimalConverter.convertToDecimal(romanNumeral.toString());
         if (decimalValue == -1) {
-            return "Requested number is in an invalid format";
+            return Literals.wrongString;
         }
         String metal = romanNumerals.getOrDefault(words[words.length - 2], "0");
         query.append(words[words.length - 2]).append(" ");
         double metalCredits = Double.parseDouble(metal);
         // Look up Credits for the metal
 
-        if (words[2].equals("CREDITS")) {
-            // Adjust this logic based on your actual data structure for storing metal values
-            // The following line is just a placeholder
-
+        if (words[2].equals("Credits")) {
 
             // Calculate Credits based on the decimal value
             double totalCredits = metalCredits * (decimalValue);
-            return  query +  " is " + totalCredits + " Credits";
+            return  query.toString().trim() +  " is " + totalCredits + " Credits";
         } else {
-            return "I have no idea what you are talking about";
+            return Literals.differentSting;
         }
     }
 
@@ -91,7 +87,7 @@ public class ValueCalculator {
         double decimalValue2 =  1;
 
         for (String word : words) {
-            if (word.equals("THAN")) {
+            if (word.equals("than")) {
                 foundThan = true;
                 continue;
             }
@@ -118,23 +114,17 @@ public class ValueCalculator {
         // Convert to Decimal
         decimalValue1 *= RomanToDecimalConverter.convertToDecimal(sequence1.toString());
         decimalValue2 *= RomanToDecimalConverter.convertToDecimal(sequence2.toString());
-
         // Perform Comparison
         if (decimalValue1 == -1 || decimalValue2 == -1) {
             return Literals.wrongString;
         }
 
-        if (comparisonType.equals("more")) {
-            return decimalValue1 > decimalValue2 ? "Yes" : "No";
-        } else if (comparisonType.equals("less")) {
-            return decimalValue1 < decimalValue2 ? "Yes" : "No";
-        } else if (comparisonType.equals("larger")) {
-            return decimalValue1 > decimalValue2 ? "Yes" : "No";
-        } else if (comparisonType.equals("smaller")) {
-            return decimalValue1 < decimalValue2 ? "Yes" : "No";
-        }
+        return switch (comparisonType) {
+            case "more", "larger" -> getOutput(words, decimalValue1 > decimalValue2);
+            case "less", "smaller" -> getOutput(words, decimalValue1 < decimalValue2);
+            default -> Literals.differentSting;
+        };
 
-        return Literals.differentSting;
     }
 
     public static boolean isNumeric(String str) {
@@ -144,5 +134,83 @@ public class ValueCalculator {
         } catch(NumberFormatException e){
             return false;
         }
+    }
+
+    private  String getOutput(String[] input, boolean isNotReplace) {
+        StringBuilder sb = new StringBuilder();
+        boolean startsWithIs = false;
+        for (String str: input) {
+            if (Objects.equals(str, "Is") || Objects.equals(str, "Does") || Objects.equals(str, "?")) {
+                startsWithIs = Objects.equals(str, "Is");
+                continue;
+            }
+            if (isNotReplace) {
+                switch (str) {
+                    case "less" -> {
+                        if (startsWithIs) {
+                            sb.append("is less ");
+                        } else {
+                            sb.append("less ");
+                        }
+                    }
+                    case "more" -> {
+                        if (startsWithIs) {
+                            sb.append(" is more ");
+                        } else {
+                            sb.append("more ");
+                        }
+                    }
+                    case "larger" -> {
+                        if (startsWithIs) {
+                            sb.append("is larger ");
+                        } else {
+                            sb.append("larger ");
+                        }
+                    }
+                    case "smaller" -> {
+                        if (startsWithIs) {
+                            sb.append("is smaller ");
+                        } else {
+                            sb.append("smaller ");
+                        }
+                    }
+                    case null, default -> sb.append(str).append(" ");
+                }
+            } else {
+                switch (str) {
+                    case "less" -> {
+                        if (startsWithIs) {
+                            sb.append("is more ");
+                        } else {
+                            sb.append("more ");
+                        }
+                    }
+                    case "more" -> {
+                        if (startsWithIs) {
+                            sb.append(" is less ");
+                        } else {
+                            sb.append("less ");
+                        }
+                    }
+                    case "larger" -> {
+                        if (startsWithIs) {
+                            sb.append("is smaller ");
+                        } else {
+                            sb.append("smaller ");
+                        }
+                    }
+                    case "smaller" -> {
+                        if (startsWithIs) {
+                            sb.append("is larger ");
+                        } else {
+                            sb.append("larger ");
+                        }
+                    }
+                    case null, default -> sb.append(str).append(" ");
+                }
+            }
+
+        }
+        return sb.toString();
     }
 }

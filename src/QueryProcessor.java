@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+
 
 public class QueryProcessor {
     private final HashMap<String, String> romanNumerals;
@@ -21,7 +21,7 @@ public class QueryProcessor {
             String line;
             List<String> queries = new ArrayList<>();
             while((line = reader.readLine()) != null) {
-                queries.add(line.toUpperCase());
+                queries.add(line);
             }
             processQueries(queries);
         } catch (FileNotFoundException e) {
@@ -38,10 +38,10 @@ public class QueryProcessor {
     }
 
     private void processInput(String input) {
-        String[] parts = input.split(" IS ");
+        String[] parts = input.split(" is ");
 
         if (parts.length == 2 && (!input.endsWith("?"))) {
-            if (parts[1].endsWith("CREDITS")) {
+            if (parts[1].endsWith("Credits")) {
                 StringBuilder sb = new StringBuilder();
                 String[] part = parts[0].split(" ");
 
@@ -59,50 +59,10 @@ public class QueryProcessor {
 
         } else {
             String result = calculator.calculateQueryValue(input, romanNumerals);
-            if (Objects.equals(result, "No") || Objects.equals(result, "Yes")) {
 
-                printOutput(input, result);
-            } else {
                 System.out.println(result);
-            }
-        }
-    }
-
-    private void printOutput(String input, String replace) {
-        System.out.println( removeFirstLastInInput(input, replace == "No"));
-
-    }
-
-    private String removeFirstLastInInput(String input, boolean b) {
-        StringBuilder sb = new StringBuilder();
-        for (String str: input.split(" ")) {
-            if (Objects.equals(str, "IS") || Objects.equals(str, "DOES") || Objects.equals(str, "?")) {
-                continue;
-            }
-            if (b) {
-                if (Objects.equals(str, "LESS")) {
-                    sb.append("MORE").append(" ");
-                } else if (Objects.equals(str, "MORE")) {
-                    sb.append("LESS").append(" ");
-                } else if (Objects.equals(str, "LARGER")) {
-                    sb.append("SMALLER").append(" ");
-                } else if (Objects.equals(str, "SMALLER")) {
-                    sb.append("LARGER").append(" ");
-                } else {
-                    sb.append(str).append(" ");
-                }
-            } else {
-                sb.append(str).append(" ");
-            }
-
-
 
         }
-        return sb.toString();
     }
 
-    public static void main(String[] args) {
-        QueryProcessor queryProcessor = new QueryProcessor();
-        queryProcessor.processQueries();
-    }
 }
