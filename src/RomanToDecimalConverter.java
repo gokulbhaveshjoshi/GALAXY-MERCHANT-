@@ -16,16 +16,26 @@ public class RomanToDecimalConverter {
     public static int convertToDecimal(String romanNumeral) {
         int decimalNumber = 0;
         int prevValue = 0;
+        int consecutiveCount = 1;  // Count consecutive repeated characters
 
         for (int i = romanNumeral.length() - 1; i >= 0; i--) {
             int value = romanNumerals.get(romanNumeral.charAt(i));
+
+            if (value == prevValue) {
+                consecutiveCount++;
+                // Check for more than three consecutive occurrences
+                if (consecutiveCount > 3) {
+                    return -1;  // Invalid sequence
+                }
+            } else {
+                consecutiveCount = 1;
+            }
 
             if (value < prevValue) {
                 decimalNumber -= value;
             } else {
                 decimalNumber += value;
             }
-
             prevValue = value;
         }
 

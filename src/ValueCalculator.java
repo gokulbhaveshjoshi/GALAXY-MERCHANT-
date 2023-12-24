@@ -43,20 +43,17 @@ public class ValueCalculator {
     }
 
     private String calculateHowManyCreditsQuery(String[] words, HashMap<String, String> romanNumerals) {
-        return "How many Credits";
-        /*StringBuilder romanNumeral = new StringBuilder();
+
+        StringBuilder romanNumeral = new StringBuilder();
+        StringBuilder query = new StringBuilder();
 
         // Combine Roman numerals to get the value
-        System.out.println(romanNumerals.entrySet());
-        for (int i = 4; i < words.length - 1; i++) {
-            System.out.println(words[i]);
-            if (Objects.equals(words[i], "?")) {
-                continue;
-            }
+        for (int i = 4; i < words.length - 2; i++) {
             if (romanNumerals.containsKey(words[i])) {
                 romanNumeral.append(romanNumerals.get(words[i]));
+                query.append(words[i]).append(" ");
             } else {
-                //return "I have no idea what you are talking about";
+                return "I have no idea what you are talking about";
             }
         }
 
@@ -64,19 +61,22 @@ public class ValueCalculator {
         if (decimalValue == -1) {
             return "Requested number is in an invalid format";
         }
-
+        String metal = romanNumerals.getOrDefault(words[words.length - 2], "0");
+        query.append(words[words.length - 2]).append(" ");
+        double metalCredits = Double.parseDouble(metal);
         // Look up Credits for the metal
-        if (words[2].equals("Credits")) {
+
+        if (words[2].equals("CREDITS")) {
             // Adjust this logic based on your actual data structure for storing metal values
             // The following line is just a placeholder
-            double metalCredits = 34.0;
+
 
             // Calculate Credits based on the decimal value
-            double totalCredits = (metalCredits * (decimalValue / 1.0)) / 2;
-            return   " is " + totalCredits + " Credits";
+            double totalCredits = metalCredits * (decimalValue);
+            return  query +  " is " + totalCredits + " Credits";
         } else {
             return "I have no idea what you are talking about";
-        }*/
+        }
     }
 
     private String calculateComparisonQuery(String[] words, HashMap<String, String> romanNumerals) {

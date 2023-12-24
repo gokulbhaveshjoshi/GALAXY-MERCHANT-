@@ -51,16 +51,17 @@ public class QueryProcessor {
                 }
                 int xMetal = RomanToDecimalConverter.convertToDecimal(sb.toString());
                 int totalCredits = Integer.parseInt( parts[1].split(" ")[0]);
-                int metalCost = totalCredits / xMetal;
+                double metalCost = (double) totalCredits / xMetal;
                 romanNumerals.put(part[part.length - 1].trim(), String.valueOf(metalCost));
             } else {
                 romanNumerals.put(parts[0].trim(), parts[1].trim());
             }
-            //System.out.println(romanNumerals.entrySet());
+            System.out.println(romanNumerals.entrySet());
         } else {
-            System.out.println("Question");
+
             String result = calculator.calculateQueryValue(input, romanNumerals);
             System.out.println(result);
+            System.out.println();
         }
 
         /*
