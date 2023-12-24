@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class QueryProcessor {
     private final HashMap<String, String> romanNumerals;
@@ -60,7 +61,13 @@ public class QueryProcessor {
         } else {
 
             String result = calculator.calculateQueryValue(input, romanNumerals);
-            System.out.println(result);
+            if (Objects.equals(result, "No") || Objects.equals(result, "Yes")) {
+
+                printOutput(input, result);
+            } else {
+                System.out.println(result);
+            }
+
             System.out.println();
         }
 
@@ -88,6 +95,40 @@ public class QueryProcessor {
 
             System.out.println(result);
         }*/
+    }
+
+    private void printOutput(String input, String replace) {
+        System.out.println("printoutput");
+        System.out.println( removeFirstLastInInput(input, replace == "No"));
+
+    }
+
+    private String removeFirstLastInInput(String input, boolean b) {
+        StringBuilder sb = new StringBuilder();
+        for (String str: input.split(" ")) {
+            if (Objects.equals(str, "IS") || Objects.equals(str, "DOES")) {
+                continue;
+            }
+            if (b) {
+                if (Objects.equals(str, "LESS")) {
+                    sb.append("MORE").append(" ");
+                } else if (Objects.equals(str, "MORE")) {
+                    sb.append("LESS").append(" ");
+                } else if (Objects.equals(str, "LARGER")) {
+                    sb.append("SMALLER").append(" ");
+                } else if (Objects.equals(str, "SMALLER")) {
+                    sb.append("LARGER").append(" ");
+                } else {
+                    sb.append(str).append(" ");
+                }
+            } else {
+                sb.append(str).append(" ");
+            }
+
+
+
+        }
+        return sb.toString();
     }
 
     public static void main(String[] args) {

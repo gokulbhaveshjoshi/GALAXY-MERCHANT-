@@ -12,11 +12,13 @@ public class ValueCalculator {
         } else if (query.startsWith("HOW MANY CREDITS IS")) {
             return calculateHowManyCreditsQuery(words, romanNumerals);
         } else if (query.startsWith("DOES") && query.contains("HAVE MORE CREDITS THAN")) {
-            return calculateComparisonQuery(words, romanNumerals);
+            return calculateComparisonQuery(words, romanNumerals, "more");
+        } else if (query.startsWith("DOES") && query.contains("HAVE LESS CREDITS THAN")) {
+            return calculateComparisonQuery(words, romanNumerals, "less");
         } else if (query.startsWith("IS") && query.contains("LARGER THAN")) {
-            return calculateComparisonQuery(words, romanNumerals);
+            return calculateComparisonQuery(words, romanNumerals, "larger");
         } else if (query.startsWith("IS") && query.contains("SMALLER THAN")) {
-            return calculateComparisonQuery(words, romanNumerals);
+            return calculateComparisonQuery(words, romanNumerals, "smaller");
         }
 
         return "I have no idea what you are talking about";
@@ -79,10 +81,46 @@ public class ValueCalculator {
         }
     }
 
-    private String calculateComparisonQuery(String[] words, HashMap<String, String> romanNumerals) {
-        // Implementation for handling comparison queries
-        // ...
-        System.out.println(romanNumerals.entrySet());
-        return "Not implemented yet";
+    private String calculateComparisonQuery(String[] words, HashMap<String, String> romanNumerals, String comparisonType) {
+        StringBuilder sequence1 = new StringBuilder();
+        StringBuilder sequence2 = new StringBuilder();
+        boolean foundThan = false;
+
+        for (String word : words) {
+            if (word.equals("THAN")) {
+                foundThan = true;
+                continue;
+            }
+
+            if (!foundThan) {
+                sequence1.append(romanNumerals.getOrDefault(word, ""));
+            } else {
+                sequence2.append(romanNumerals.getOrDefault(word, ""));
+            }
+
+        }
+
+        // Convert to Decimal
+        int decimalValue1 = RomanToDecimalConverter.convertToDecimal(sequence1.toString());
+        int decimalValue2 = RomanToDecimalConverter.convertToDecimal(sequence2.toString());
+
+        // Perform Comparison
+        if (decimalValue1 == -1 || decimalValue2 == -1) {
+            return "Requested number is in an invalid format";
+        }
+
+        if (comparisonType.equals("more")) {
+            return decimalValue1 > decimalValue2 ? "Yes" : "No";
+        } else if (comparisonType.equals("less")) {
+            return decimalValue1 < decimalValue2 ? "Yes" : "No";
+        } else if (comparisonType.equals("larger")) {
+            return decimalValue1 > decimalValue2 ? "Yes" : "No";
+        } else if (comparisonType.equals("smaller")) {
+            return decimalValue1 < decimalValue2 ? "Yes" : "No";
+        }
+
+        return "I have no idea what you are talking about";
+
+        //return "Not implemented yet";
     }
 }
