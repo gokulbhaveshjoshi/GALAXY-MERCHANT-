@@ -38,7 +38,6 @@ public class QueryProcessor {
     }
 
     private void processInput(String input) {
-
         String[] parts = input.split(" IS ");
 
         if (parts.length == 2 && (!input.endsWith("?"))) {
@@ -57,9 +56,8 @@ public class QueryProcessor {
             } else {
                 romanNumerals.put(parts[0].trim(), parts[1].trim());
             }
-            System.out.println(romanNumerals.entrySet());
-        } else {
 
+        } else {
             String result = calculator.calculateQueryValue(input, romanNumerals);
             if (Objects.equals(result, "No") || Objects.equals(result, "Yes")) {
 
@@ -67,38 +65,10 @@ public class QueryProcessor {
             } else {
                 System.out.println(result);
             }
-
-            System.out.println();
         }
-
-        /*
-        // handle input "glob is I"
-        if (parts.length == 2 && (! input.endsWith("?")) && (! input.endsWith("Credits")) ) {
-            // Handle statements like "glob is I" and metal value assignments
-            romanNumerals.put(parts[0].trim(), parts[1].trim());
-        } else if (parts[1].endsWith("Credit")) {
-            String[] metals = parts[0].split(" ");
-            StringBuilder roman = new StringBuilder();
-            for (int i = 0; i < metals.length - 1; i++) {
-                if (romanNumerals.containsKey(metals[i])) {
-                    roman.append(romanNumerals.get(metals[i]));
-                }
-            }
-            int decimalValue = RomanToDecimalConverter.convertToDecimal(roman.toString());
-            int creditValue = Integer.parseInt(parts[1].split(" ")[0]);
-            int metalValue = creditValue / decimalValue;
-            romanNumerals.put(metals[metals.length - 1], String.valueOf(metalValue));
-        }
-        else {
-            // Handle queries like "how much is pish tegj glob glob?"
-            System.out.println("statement output");
-
-            System.out.println(result);
-        }*/
     }
 
     private void printOutput(String input, String replace) {
-        System.out.println("printoutput");
         System.out.println( removeFirstLastInInput(input, replace == "No"));
 
     }
@@ -106,7 +76,7 @@ public class QueryProcessor {
     private String removeFirstLastInInput(String input, boolean b) {
         StringBuilder sb = new StringBuilder();
         for (String str: input.split(" ")) {
-            if (Objects.equals(str, "IS") || Objects.equals(str, "DOES")) {
+            if (Objects.equals(str, "IS") || Objects.equals(str, "DOES") || Objects.equals(str, "?")) {
                 continue;
             }
             if (b) {

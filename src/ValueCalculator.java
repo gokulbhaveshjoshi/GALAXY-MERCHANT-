@@ -5,15 +5,15 @@ import java.util.Objects;
 public class ValueCalculator {
     public String calculateQueryValue(String query, HashMap<String, String> romanNumerals) {
         String[] words = query.split(" ");
-        System.out.println(query);
+
         // Check for specific query types
         if (query.startsWith("HOW MUCH IS")) {
             return calculateHowMuchQuery(words, romanNumerals);
         } else if (query.startsWith("HOW MANY CREDITS IS")) {
             return calculateHowManyCreditsQuery(words, romanNumerals);
-        } else if (query.startsWith("DOES") && query.contains("HAVE MORE CREDITS THAN")) {
+        } else if (query.startsWith("DOES") && query.contains("HAVE MORE CREDITS THAN") || query.contains("HAS MORE CREDITS THAN")) {
             return calculateComparisonQuery(words, romanNumerals, "more");
-        } else if (query.startsWith("DOES") && query.contains("HAVE LESS CREDITS THAN")) {
+        } else if (query.startsWith("DOES") && (query.contains("HAVE LESS CREDITS THAN") || query.contains("HAS LESS CREDITS THAN")) ) {
             return calculateComparisonQuery(words, romanNumerals, "less");
         } else if (query.startsWith("IS") && query.contains("LARGER THAN")) {
             return calculateComparisonQuery(words, romanNumerals, "larger");
@@ -84,29 +84,44 @@ public class ValueCalculator {
     private String calculateComparisonQuery(String[] words, HashMap<String, String> romanNumerals, String comparisonType) {
         StringBuilder sequence1 = new StringBuilder();
         StringBuilder sequence2 = new StringBuilder();
+
         boolean foundThan = false;
+
+        double decimalValue1 = 1;
+        double decimalValue2 =  1;
 
         for (String word : words) {
             if (word.equals("THAN")) {
                 foundThan = true;
                 continue;
             }
+            String value = romanNumerals.getOrDefault(word, "");
+
 
             if (!foundThan) {
-                sequence1.append(romanNumerals.getOrDefault(word, ""));
+                if (isNumeric(value)) {
+                    decimalValue1 = Double.parseDouble(value);
+                } else {
+                    sequence1.append(romanNumerals.getOrDefault(word, ""));
+                }
+
             } else {
-                sequence2.append(romanNumerals.getOrDefault(word, ""));
+                if (isNumeric(value)) {
+                    decimalValue2 = Double.parseDouble(value);
+                } else {
+                    sequence2.append(romanNumerals.getOrDefault(word, ""));
+                }
             }
 
         }
 
         // Convert to Decimal
-        int decimalValue1 = RomanToDecimalConverter.convertToDecimal(sequence1.toString());
-        int decimalValue2 = RomanToDecimalConverter.convertToDecimal(sequence2.toString());
+        decimalValue1 *= RomanToDecimalConverter.convertToDecimal(sequence1.toString());
+        decimalValue2 *= RomanToDecimalConverter.convertToDecimal(sequence2.toString());
 
         // Perform Comparison
         if (decimalValue1 == -1 || decimalValue2 == -1) {
-            return "Requested number is in an invalid format";
+            return Literals.wrongString;
         }
 
         if (comparisonType.equals("more")) {
@@ -119,8 +134,15 @@ public class ValueCalculator {
             return decimalValue1 < decimalValue2 ? "Yes" : "No";
         }
 
-        return "I have no idea what you are talking about";
+        return Literals.differentSting;
+    }
 
-        //return "Not implemented yet";
+    public static boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch(NumberFormatException e){
+            return false;
+        }
     }
 }
