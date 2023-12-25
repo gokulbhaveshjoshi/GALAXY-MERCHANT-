@@ -161,22 +161,23 @@ public class ValueCalculator {
         StringBuilder sb = new StringBuilder();
         boolean startsWithIs = false;
         for (String str: input) {
-            if ("is".equalsIgnoreCase(str) || "does".equalsIgnoreCase(str) || "?".equalsIgnoreCase(str)) {
+            if (isAQuestion(str)) {
                 startsWithIs = "is".equalsIgnoreCase(str);
                 continue;
             }
-            if (startsWithIs) {
-                if (oppositeName.containsKey(str)) {
-                    sb.append("is ");
-                }
+            if (startsWithIs && oppositeName.containsKey(str)) {
+                sb.append("is ");
             }
             if (isNotReplace) {
                 sb.append(str).append(" ");
-            } else {
-                sb.append(oppositeName.getOrDefault(str, str)).append(" ");
+                continue;
             }
-
+            sb.append(oppositeName.getOrDefault(str, str)).append(" ");
         }
         return sb.toString();
+    }
+
+    private static boolean isAQuestion(String str) {
+        return "is".equalsIgnoreCase(str) || "does".equalsIgnoreCase(str) || "?".equalsIgnoreCase(str);
     }
 }
