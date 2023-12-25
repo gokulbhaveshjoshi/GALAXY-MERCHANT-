@@ -1,3 +1,6 @@
+package com.bhavesh.coffeee.assignment.calculator;
+
+
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -14,7 +17,7 @@ public class ValueCalculatorTest {
         romanNumerals.put("pish", "X");
         romanNumerals.put("tegj", "L");
 
-        // Create the ValueCalculator instance
+        // Create the com.bhavesh.coffeee.assignment.calculator.ValueCalculator instance
         ValueCalculator calculator = new ValueCalculator();
 
         // Test the calculateHowMuchQuery method
@@ -33,7 +36,7 @@ public class ValueCalculatorTest {
         romanNumerals.put("pish", "X");
         romanNumerals.put("tegj", "L");
 
-        // Create the ValueCalculator instance
+        // Create the com.bhavesh.coffeee.assignment.calculator.ValueCalculator instance
         ValueCalculator calculator = new ValueCalculator();
 
         // Test the calculateHowManyCreditsQuery method

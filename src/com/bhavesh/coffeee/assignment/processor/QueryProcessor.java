@@ -1,3 +1,8 @@
+package com.bhavesh.coffeee.assignment.processor;
+
+import com.bhavesh.coffeee.assignment.RomanToDecimalConverter;
+import com.bhavesh.coffeee.assignment.calculator.ValueCalculator;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,10 +29,8 @@ public class QueryProcessor {
                 queries.add(line);
             }
             processQueries(queries);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
