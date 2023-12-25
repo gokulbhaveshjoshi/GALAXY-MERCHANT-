@@ -165,20 +165,14 @@ public class ValueCalculator {
                 startsWithIs = "is".equalsIgnoreCase(str);
                 continue;
             }
-            if (isNotReplace) {
-                if (startsWithIs) {
-                    if (oppositeName.containsKey(str)) {
-                        sb.append("is ");
-                    }
+            if (startsWithIs) {
+                if (oppositeName.containsKey(str)) {
+                    sb.append("is ");
                 }
+            }
+            if (isNotReplace) {
                 sb.append(str).append(" ");
             } else {
-                if (startsWithIs) {
-                    if (oppositeName.containsKey(str)) {
-                        sb.append("is ");
-                    }
-
-                }
                 sb.append(oppositeName.getOrDefault(str, str)).append(" ");
             }
 
