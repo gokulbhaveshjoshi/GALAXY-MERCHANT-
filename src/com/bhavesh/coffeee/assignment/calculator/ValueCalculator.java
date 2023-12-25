@@ -4,9 +4,21 @@ import com.bhavesh.coffeee.assignment.Literals;
 import com.bhavesh.coffeee.assignment.RomanToDecimalConverter;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class ValueCalculator {
+    private Map<String, String> oppositeName;
+
+    public ValueCalculator() {
+        oppositeName = new HashMap<>();
+        oppositeName.put("smaller", "larger");
+        oppositeName.put("larger", "smaller");
+        oppositeName.put("more", "less");
+        oppositeName.put("less", "more");
+    }
+
+
     public String calculateQueryValue(String query, HashMap<String, String> romanNumerals) {
         String[] words = query.split(" ");
 
@@ -149,48 +161,25 @@ public class ValueCalculator {
         StringBuilder sb = new StringBuilder();
         boolean startsWithIs = false;
         for (String str: input) {
-            if (Objects.equals(str, "Is") || Objects.equals(str, "Does") || Objects.equals(str, "?")) {
-                startsWithIs = Objects.equals(str, "Is");
+            if ("is".equalsIgnoreCase(str) || "does".equalsIgnoreCase(str) || "?".equalsIgnoreCase(str)) {
+                startsWithIs = "is".equalsIgnoreCase(str);
                 continue;
             }
             if (isNotReplace) {
                 if (startsWithIs) {
-                    sb.append("is ").append(str).append(" ");
-                } else {
-                    sb.append(str).append(" ");
+                    if (oppositeName.containsKey(str)) {
+                        sb.append("is ");
+                    }
                 }
+                sb.append(str).append(" ");
             } else {
-                switch (str) {
-                    case "less" -> {
-                        if (startsWithIs) {
-                            sb.append("is more ");
-                        } else {
-                            sb.append("more ");
-                        }
+                if (startsWithIs) {
+                    if (oppositeName.containsKey(str)) {
+                        sb.append("is ");
                     }
-                    case "more" -> {
-                        if (startsWithIs) {
-                            sb.append(" is less ");
-                        } else {
-                            sb.append("less ");
-                        }
-                    }
-                    case "larger" -> {
-                        if (startsWithIs) {
-                            sb.append("is smaller ");
-                        } else {
-                            sb.append("smaller ");
-                        }
-                    }
-                    case "smaller" -> {
-                        if (startsWithIs) {
-                            sb.append("is larger ");
-                        } else {
-                            sb.append("larger ");
-                        }
-                    }
-                    case null, default -> sb.append(str).append(" ");
+
                 }
+                sb.append(oppositeName.getOrDefault(str, str)).append(" ");
             }
 
         }
