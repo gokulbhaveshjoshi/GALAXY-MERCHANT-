@@ -154,36 +154,10 @@ public class ValueCalculator {
                 continue;
             }
             if (isNotReplace) {
-                switch (str) {
-                    case "less" -> {
-                        if (startsWithIs) {
-                            sb.append("is less ");
-                        } else {
-                            sb.append("less ");
-                        }
-                    }
-                    case "more" -> {
-                        if (startsWithIs) {
-                            sb.append(" is more ");
-                        } else {
-                            sb.append("more ");
-                        }
-                    }
-                    case "larger" -> {
-                        if (startsWithIs) {
-                            sb.append("is larger ");
-                        } else {
-                            sb.append("larger ");
-                        }
-                    }
-                    case "smaller" -> {
-                        if (startsWithIs) {
-                            sb.append("is smaller ");
-                        } else {
-                            sb.append("smaller ");
-                        }
-                    }
-                    case null, default -> sb.append(str).append(" ");
+                if (startsWithIs) {
+                    sb.append("is ").append(str).append(" ");
+                } else {
+                    sb.append(str).append(" ");
                 }
             } else {
                 switch (str) {
