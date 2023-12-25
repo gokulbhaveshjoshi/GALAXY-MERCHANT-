@@ -13,15 +13,20 @@ public class ValueCalculator {
         // Check for specific query types
         if (query.startsWith("how much is")) {
             return calculateHowMuchQuery(words, romanNumerals);
-        } else if (query.startsWith("how many Credits is")) {
+        }
+        if (query.startsWith("how many Credits is")) {
             return calculateHowManyCreditsQuery(words, romanNumerals);
-        } else if (query.toLowerCase().startsWith("does") && query.contains("have more Credits than") || query.contains("has more Credits than")) {
+        }
+        if (query.toLowerCase().startsWith("does") && query.contains("have more Credits than") || query.contains("has more Credits than")) {
             return calculateComparisonQuery(words, romanNumerals, "more");
-        } else if (query.toLowerCase().startsWith("does") && (query.contains("have less Credits than") || query.contains("has less Credits than")) ) {
+        }
+        if (query.toLowerCase().startsWith("does") && (query.contains("have less Credits than") || query.contains("has less Credits than")) ) {
             return calculateComparisonQuery(words, romanNumerals, "less");
-        } else if (query.toLowerCase().startsWith("is") && query.contains("larger than")) {
+        }
+        if (query.toLowerCase().startsWith("is") && query.contains("larger than")) {
             return calculateComparisonQuery(words, romanNumerals, "larger");
-        } else if (query.toLowerCase().startsWith("is") && query.contains("smaller than")) {
+        }
+        if (query.toLowerCase().startsWith("is") && query.contains("smaller than")) {
             return calculateComparisonQuery(words, romanNumerals, "smaller");
         }
 
