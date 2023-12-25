@@ -1,6 +1,7 @@
 package com.bhavesh.coffeee.assignment.processor;
 
-import com.bhavesh.coffeee.assignment.RomanToDecimalConverter;
+import com.bhavesh.coffeee.assignment.assigner.CreditsPreConditonAssigner;
+import com.bhavesh.coffeee.assignment.assigner.RomainPreConditionAssigner;
 import com.bhavesh.coffeee.assignment.calculator.ValueCalculator;
 
 import java.io.*;
@@ -13,9 +14,14 @@ public class QueryProcessor {
     private final HashMap<String, String> romanNumerals;
     private final ValueCalculator calculator;
 
+    private RomainPreConditionAssigner romainPreConditionAssigner;
+    private CreditsPreConditonAssigner creditsPreConditonAssigner;
+
     public QueryProcessor() {
         romanNumerals = new HashMap<>();
         calculator = new ValueCalculator();
+        romainPreConditionAssigner = new RomainPreConditionAssigner();
+        creditsPreConditonAssigner = new CreditsPreConditonAssigner();
     }
 
     public void processQueries() {
@@ -23,11 +29,13 @@ public class QueryProcessor {
             FileInputStream fileInputStream = new FileInputStream("InputFile");
             BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
 
-            String line;
             List<String> queries = new ArrayList<>();
-            while((line = reader.readLine()) != null) {
+            String line = reader.readLine();
+            while(line != null) {
                 queries.add(line);
+                line = reader.readLine();
             }
+
             processQueries(queries);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -43,21 +51,11 @@ public class QueryProcessor {
     private void processInput(String input) {
         String[] parts = input.split(" is ");
 
-        if (parts.length == 2 && (!input.endsWith("?"))) {
+        if (isDataAssigner(input, parts)) {
             if (parts[1].endsWith("Credits")) {
-                StringBuilder sb = new StringBuilder();
-                String[] part = parts[0].split(" ");
-
-                for (int i = 0; i < part.length - 1; i++) {
-                    String romanValue = romanNumerals.getOrDefault(part[i], "");
-                    sb.append(romanValue);
-                }
-                int xMetal = RomanToDecimalConverter.convertToDecimal(sb.toString());
-                int totalCredits = Integer.parseInt( parts[1].split(" ")[0]);
-                double metalCost = (double) totalCredits / xMetal;
-                romanNumerals.put(part[part.length - 1].trim(), String.valueOf(metalCost));
+                creditsPreConditonAssigner.process(parts,romanNumerals);
             } else {
-                romanNumerals.put(parts[0].trim(), parts[1].trim());
+                romainPreConditionAssigner.process(parts, romanNumerals);
             }
 
         } else {
@@ -66,6 +64,10 @@ public class QueryProcessor {
                 System.out.println(result);
 
         }
+    }
+
+    private static boolean isDataAssigner(String input, String[] parts) {
+        return parts.length == 2 && (!input.endsWith("?"));
     }
 
 }
