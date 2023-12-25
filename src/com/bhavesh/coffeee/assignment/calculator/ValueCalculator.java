@@ -52,9 +52,10 @@ public class ValueCalculator {
             if (romanNumerals.containsKey(words[i])) {
                 romanNumeral.append(romanNumerals.get(words[i]));
                 query.append(words[i]).append(" ");
-            } else {
-                return Literals.differentSting;
+                continue;
             }
+            return Literals.differentSting;
+
         }
 
         int decimalValue = RomanToDecimalConverter.convertToDecimal(romanNumeral.toString());
@@ -66,18 +67,16 @@ public class ValueCalculator {
     }
 
     public String calculateHowManyCreditsQuery(String[] words, HashMap<String, String> romanNumerals) {
-
         StringBuilder romanNumeral = new StringBuilder();
         StringBuilder query = new StringBuilder();
-
 
         for (int i = 4; i < words.length - 2; i++) {
             if (romanNumerals.containsKey(words[i])) {
                 romanNumeral.append(romanNumerals.get(words[i]));
                 query.append(words[i]).append(" ");
-            } else {
-                return Literals.differentSting;
+                continue;
             }
+            return Literals.differentSting;
         }
 
         int decimalValue = RomanToDecimalConverter.convertToDecimal(romanNumeral.toString());
@@ -89,13 +88,11 @@ public class ValueCalculator {
         double metalCredits = Double.parseDouble(metal);
 
         if (words[2].equals("Credits")) {
-
-
             double totalCredits = metalCredits * (decimalValue);
             return  query.toString().trim() +  " is " + totalCredits + " Credits";
-        } else {
-            return Literals.differentSting;
         }
+
+        return Literals.differentSting;
     }
 
     private String calculateComparisonQuery(String[] words, HashMap<String, String> romanNumerals, String comparisonType) {
@@ -115,20 +112,21 @@ public class ValueCalculator {
             String value = romanNumerals.getOrDefault(word, "");
 
 
-            if (!foundThan) {
-                if (isNumeric(value)) {
-                    decimalValue1 = Double.parseDouble(value);
-                } else {
-                    sequence1.append(romanNumerals.getOrDefault(word, ""));
-                }
-
-            } else {
+            if (foundThan) {
                 if (isNumeric(value)) {
                     decimalValue2 = Double.parseDouble(value);
                 } else {
                     sequence2.append(romanNumerals.getOrDefault(word, ""));
                 }
+                continue;
             }
+
+            if (isNumeric(value)) {
+                decimalValue1 = Double.parseDouble(value);
+            } else {
+                sequence1.append(romanNumerals.getOrDefault(word, ""));
+            }
+
 
         }
 
