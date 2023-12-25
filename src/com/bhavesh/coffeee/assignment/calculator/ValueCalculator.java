@@ -10,7 +10,7 @@ public class ValueCalculator {
     public String calculateQueryValue(String query, HashMap<String, String> romanNumerals) {
         String[] words = query.split(" ");
 
-        // Check for specific query types
+
         if (query.startsWith("how much is")) {
             return calculateHowMuchQuery(words, romanNumerals);
         }
@@ -58,7 +58,7 @@ public class ValueCalculator {
         StringBuilder romanNumeral = new StringBuilder();
         StringBuilder query = new StringBuilder();
 
-        // Combine Roman numerals to get the value
+
         for (int i = 4; i < words.length - 2; i++) {
             if (romanNumerals.containsKey(words[i])) {
                 romanNumeral.append(romanNumerals.get(words[i]));
@@ -75,11 +75,10 @@ public class ValueCalculator {
         String metal = romanNumerals.getOrDefault(words[words.length - 2], "0");
         query.append(words[words.length - 2]).append(" ");
         double metalCredits = Double.parseDouble(metal);
-        // Look up Credits for the metal
 
         if (words[2].equals("Credits")) {
 
-            // Calculate Credits based on the decimal value
+
             double totalCredits = metalCredits * (decimalValue);
             return  query.toString().trim() +  " is " + totalCredits + " Credits";
         } else {
@@ -121,10 +120,10 @@ public class ValueCalculator {
 
         }
 
-        // Convert to Decimal
+
         decimalValue1 *= RomanToDecimalConverter.convertToDecimal(sequence1.toString());
         decimalValue2 *= RomanToDecimalConverter.convertToDecimal(sequence2.toString());
-        // Perform Comparison
+
         if (decimalValue1 == -1 || decimalValue2 == -1) {
             return Literals.wrongString;
         }
